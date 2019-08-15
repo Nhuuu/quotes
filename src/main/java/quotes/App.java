@@ -5,14 +5,30 @@ package quotes;
 
 import com.google.gson.Gson;
 
-/*
-Your program should use GSON to parse the .json file.
-The app needs no functionality other than showing
-random quote and the author when it is run.
-The app should choose one quote each time it is run.
- */
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 public class App {
-    public static void main(String[] args){
-//        Gson gson = new Gson();
+  public static void main(String[] args) throws FileNotFoundException {
+    getRandomQuote();
+  }
+
+  public static void getRandomQuote() throws FileNotFoundException {
+    String allQuotes = readFile("src/main/resources/recentquotes.json");
+    Gson gson = new Gson();
+    Quote[] quotes = gson.fromJson(allQuotes, Quote[].class);
+    int random = (int)(Math.random() * quotes.length);
+    System.out.println(quotes[random]);
+  }
+
+  public static String readFile(String fileName) throws FileNotFoundException {
+    Scanner q = new Scanner(new File(fileName));
+    StringBuilder quoteStrings = new StringBuilder();
+    while(q.hasNextLine()){
+      quoteStrings.append(q.nextLine());
     }
+    return quoteStrings.toString();
+  }
+
 }
