@@ -3,11 +3,28 @@
  */
 package quotes;
 
+import com.google.gson.Gson;
+import org.junit.Before;
 import org.junit.Test;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
+
 import static org.junit.Assert.*;
 
 public class AppTest {
-    @Test public void testToString() {
 
-    }
+  // https://stackoverflow.com/questions/1119385/junit-test-for-system-out-println
+  private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+
+  @Before
+  public void setUpStreams() {
+    System.setOut(new PrintStream(outContent));
+  }
+
+  @Test public void testGetRandomQuote() throws FileNotFoundException {
+    App.getRandomQuote();
+    assertNotEquals("Should contain a quote", "", outContent.toString());
+  }
 }
