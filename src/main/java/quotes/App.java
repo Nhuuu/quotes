@@ -19,7 +19,7 @@ public class App {
     Gson gson = new Gson();
     Quote[] quotes = gson.fromJson(allQuotes, Quote[].class);
     int random = (int)(Math.random() * quotes.length);
-    System.out.println(quotes[random]);
+    System.out.println(quotes[random].toString());
   }
 
   public static String readFile(String fileName) throws FileNotFoundException {
