@@ -3,12 +3,16 @@
  */
 package quotes;
 
-public class App {
-    public String getGreeting() {
-        return "Hello world.";
-    }
+import com.google.gson.Gson;
 
-    public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+/*
+Your program should use GSON to parse the .json file.
+The app needs no functionality other than showing
+random quote and the author when it is run.
+The app should choose one quote each time it is run.
+ */
+public class App {
+    public static void main(String[] args){
+//        Gson gson = new Gson();
     }
 }
