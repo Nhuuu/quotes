@@ -15,16 +15,15 @@ import static org.junit.Assert.*;
 
 public class AppTest {
 
-  // https://stackoverflow.com/questions/1119385/junit-test-for-system-out-println
-  private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-
-  @Before
-  public void setUpStreams() {
-    System.setOut(new PrintStream(outContent));
+  @Test public void testGetRandomQuote() throws FileNotFoundException {
+    Quote[] quotes = App.getQuotesFromFile();
+    App.getRandomQuote(quotes);
+    assertNotEquals("Should contain a quote", "", App.getRandomQuote(quotes));
   }
 
-  @Test public void testGetRandomQuote() throws FileNotFoundException {
-    App.getRandomQuote();
-    assertNotEquals("Should contain a quote", "", outContent.toString());
+  @Test public void testGetQuoteFromAPI(){
+//    ApiQuote apiQuotes = App.getQuoteFromAPI();
+//    assertNotEquals("Should contain a quote", "", outContent.toString());
+
   }
 }
