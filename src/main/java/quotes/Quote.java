@@ -10,6 +10,6 @@ public class Quote {
   }
 
   public String toString(){
-    return String.format("Author: %s, Text: %s", this.author, this.text);
+    return String.format(this.text + " -" + this.author);
   }
 }

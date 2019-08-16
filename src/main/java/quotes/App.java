@@ -5,27 +5,61 @@ package quotes;
 
 import com.google.gson.Gson;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class App {
-  
-  public static void getRandomQuote() throws FileNotFoundException {
-    String allQuotes = readFile("src/main/resources/recentquotes.json");
-    Gson gson = new Gson();
-    Quote[] quotes = gson.fromJson(allQuotes, Quote[].class);
-    int random = (int)(Math.random() * quotes.length);
-    System.out.println(quotes[random].toString());
+
+  public static void main(String[] args) throws FileNotFoundException {
+      getQuoteFromAPI();
   }
 
-  public static String readFile(String fileName) throws FileNotFoundException {
-    Scanner q = new Scanner(new File(fileName));
-    StringBuilder quoteStrings = new StringBuilder();
-    while(q.hasNextLine()){
-      quoteStrings.append(q.nextLine());
+  public static void getQuoteFromAPI() throws FileNotFoundException {
+    // https://www.baeldung.com/java-http-request
+    try {
+      URL url = new URL("http://swquotesapi.digitaljedi.dk/api/SWQuote/RandomStarWarsQuote");
+      HttpURLConnection con = (HttpURLConnection) url.openConnection();
+      con.setRequestMethod("GET");
+      System.out.println(con.getResponseCode());
+
+      BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+      Gson gson = new Gson();
+      ApiQuote apiQuote = gson.fromJson(in, ApiQuote.class);
+      write(apiQuote);
+      in.close();
+
+      System.out.println(apiQuote);
+    } catch (IOException e) {
+      e.printStackTrace();
+      Quote[] quotes = getQuotesFromFile();
+      getRandomQuote(quotes);
     }
-    return quoteStrings.toString();
   }
 
+
+  public static void write(ApiQuote quote) {
+    BufferedWriter writer = null;
+    try {
+      Gson gson = new Gson();
+      String makeJson = gson.toJson(quote);
+      writer = new BufferedWriter(new FileWriter("src/main/resources/apiquotes.json", true));
+      writer.newLine();
+      writer.append(makeJson);
+      writer.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static Quote[] getQuotesFromFile() throws FileNotFoundException {
+    Gson gson = new Gson();
+    Quote[] quotes = gson.fromJson(new FileReader("src/main/resources/recentquotes.json"), Quote[].class);
+    return quotes;
+  }
+
+  public static Quote getRandomQuote(Quote[] quotes) {
+    int random = (int)(Math.random() * quotes.length);
+    return quotes[random];
+  }
 }
