@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintStream;
 
 import static org.junit.Assert.*;
@@ -23,7 +24,7 @@ public class AppTest {
     System.setOut(new PrintStream(outContent));
   }
 
-  @Test public void testGetRandomQuote() throws FileNotFoundException {
+  @Test public void testGetRandomQuote() throws IOException {
     App.getRandomQuote();
     assertNotEquals("Should contain a quote", "", outContent.toString());
   }
