@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class App {
 
@@ -24,7 +25,7 @@ public class App {
       BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
       Gson gson = new Gson();
       ApiQuote apiQuote = gson.fromJson(in, ApiQuote.class);
-      writeToApiFile(apiQuote);
+      makeJsonArray(apiQuote);
       in.close();
       System.out.println(apiQuote);
     } catch (IOException e) {
@@ -34,11 +35,17 @@ public class App {
     }
   }
 
-  public static void writeToApiFile(ApiQuote quote) {
+  public static void makeJsonArray(ApiQuote quote) {
+    ArrayList<ApiQuote> jsonQuotes = new ArrayList<>();
+    jsonQuotes.add(quote);
+    writeToApiFile(jsonQuotes);
+  }
+
+  public static void writeToApiFile(ArrayList<ApiQuote> quotes) {
     BufferedWriter writer = null;
     try {
       Gson gson = new Gson();
-      String makeJson = gson.toJson(quote);
+      String makeJson = gson.toJson(quotes);
       writer = new BufferedWriter(new FileWriter("src/main/resources/apiquotes.json", true));
       writer.newLine();
       writer.append(makeJson);
