@@ -21,24 +21,20 @@ public class App {
       URL url = new URL("http://swquotesapi.digitaljedi.dk/api/SWQuote/RandomStarWarsQuote");
       HttpURLConnection con = (HttpURLConnection) url.openConnection();
       con.setRequestMethod("GET");
-      System.out.println(con.getResponseCode());
-
       BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
       Gson gson = new Gson();
       ApiQuote apiQuote = gson.fromJson(in, ApiQuote.class);
-      write(apiQuote);
+      writeToApiFile(apiQuote);
       in.close();
-
       System.out.println(apiQuote);
     } catch (IOException e) {
       e.printStackTrace();
-      Quote[] quotes = getQuotesFromFile();
-      getRandomQuote(quotes);
+      Quote[] quotes = makeQuotesFromFile();
+      System.out.println(getRandomQuoteFromFile(quotes));
     }
   }
 
-
-  public static void write(ApiQuote quote) {
+  public static void writeToApiFile(ApiQuote quote) {
     BufferedWriter writer = null;
     try {
       Gson gson = new Gson();
@@ -52,13 +48,13 @@ public class App {
     }
   }
 
-  public static Quote[] getQuotesFromFile() throws FileNotFoundException {
+  public static Quote[] makeQuotesFromFile() throws FileNotFoundException {
     Gson gson = new Gson();
     Quote[] quotes = gson.fromJson(new FileReader("src/main/resources/recentquotes.json"), Quote[].class);
     return quotes;
   }
 
-  public static Quote getRandomQuote(Quote[] quotes) {
+  public static Quote getRandomQuoteFromFile(Quote[] quotes) {
     int random = (int)(Math.random() * quotes.length);
     return quotes[random];
   }
