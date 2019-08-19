@@ -19,3 +19,4 @@ This app will make an Api call for a random Star Wars quote, add it to a Json fi
 
 * Run: 
     * ./gradlew run
+
