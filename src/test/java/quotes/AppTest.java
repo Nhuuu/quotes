@@ -3,7 +3,7 @@
  */
 package quotes;
 
-import com.google.gson.Gson;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,9 +12,11 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.PrintStream;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 public class AppTest {
+
   Quote[] quotes;
   QuoteApi myNewQuote;
   @Before
@@ -37,5 +39,6 @@ public class AppTest {
 
   @Test public void testWriteToFile() throws FileNotFoundException {
     assertNotEquals("This should be my awesome new quote","",App.getQuotesFromFile());
-  }
-}
+
+
+  
