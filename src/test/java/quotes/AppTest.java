@@ -17,28 +17,40 @@ import static org.junit.Assert.assertTrue;
 
 public class AppTest {
 
-  Quote[] quotes;
-  QuoteApi myNewQuote;
+  // https://stackoverflow.com/questions/1119385/junit-test-for-system-out-println
+  private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+
   @Before
-  public void setup() throws FileNotFoundException {
-    quotes = App.getQuotesFromFile();
-    App.getRandomQuote(quotes);
-    myNewQuote = new QuoteApi("This is something Fabian just made up!!!!");
-    App.write(myNewQuote);
+  public void setUpStreams() {
+    System.setOut(new PrintStream(outContent));
   }
 
-  @Test public void testGetRandomQuote(){
-
-    assertNotEquals("Should contain a quote", "", App.getRandomQuote(quotes));
+  @Test public void testGetRandomQuoteFromFile_not_empty() throws FileNotFoundException {
+    Quote[] quotes = App.makeQuotesFromFile();
+    App.getRandomQuoteFromFile(quotes);
+    assertNotEquals("Should contain a quote", "", App.getRandomQuoteFromFile(quotes));
   }
 
-  @Test public void testGetQuoteFromAPI() throws FileNotFoundException {
-//This is testing the Api quotes and the ApiQuote class
-  assertNotEquals("this should be the first quote from the API","", App.getQuoteFromAPI());
+  @Test public void testGetRandomQuoteFromFile() throws FileNotFoundException {
+    Quote[] quotes = App.makeQuotesFromFile();
+    String result = App.getRandomQuoteFromFile(quotes).toString();
+    String regex ="[^“].*[”] - .*";
+    assertTrue("Should contain a regex test of true", result.matches(regex));
   }
 
-  @Test public void testWriteToFile() throws FileNotFoundException {
-    assertNotEquals("This should be my awesome new quote","",App.getQuotesFromFile());
+  @Test public void testGetQuoteFromApi_not_empty() throws FileNotFoundException {
+    App.getQuoteFromAPI();
+    String result = outContent.toString();
+    assertNotEquals("Should contain a quote", "", result);
+  }
 
+  @Test public void testGetQuoteFromApi() throws FileNotFoundException {
+    App.getQuoteFromAPI();
+    String result = outContent.toString();
+    assertTrue("Should contain a quote", result.contains("-") || result.contains("?"));
+
+  }
+
+}
 
   
