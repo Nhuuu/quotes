@@ -3,7 +3,7 @@
  */
 package quotes;
 
-import com.google.gson.Gson;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,19 +11,42 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 public class AppTest {
 
-  @Test public void testGetRandomQuote() throws FileNotFoundException {
-    Quote[] quotes = App.getQuotesFromFile();
-    App.getRandomQuote(quotes);
-    assertNotEquals("Should contain a quote", "", App.getRandomQuote(quotes));
+  // https://stackoverflow.com/questions/1119385/junit-test-for-system-out-println
+  private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+
+  @Before
+  public void setUpStreams() {
+    System.setOut(new PrintStream(outContent));
   }
 
-  @Test public void testGetQuoteFromAPI(){
-//    ApiQuote apiQuotes = App.getQuoteFromAPI();
-//    assertNotEquals("Should contain a quote", "", outContent.toString());
-
+  @Test public void testGetRandomQuoteFromFile_not_empty() throws FileNotFoundException {
+    Quote[] quotes = App.makeQuotesFromFile();
+    App.getRandomQuoteFromFile(quotes);
+    assertNotEquals("Should contain a quote", "", App.getRandomQuoteFromFile(quotes));
   }
+
+  @Test public void testGetRandomQuoteFromFile() throws FileNotFoundException {
+    Quote[] quotes = App.makeQuotesFromFile();
+    String result = App.getRandomQuoteFromFile(quotes).toString();
+    String regex ="[^“].*[”] - .*";
+    assertTrue("Should contain a regex test of true", result.matches(regex));
+  }
+
+  @Test public void testGetQuoteFromApi_not_empty() throws FileNotFoundException {
+    App.getQuoteFromAPI();
+    String result = outContent.toString();
+    assertNotEquals("Should contain a quote", "", result);
+  }
+
+  @Test public void testGetQuoteFromApi() throws FileNotFoundException {
+    App.getQuoteFromAPI();
+    String result = outContent.toString();
+    assertTrue("Should contain a quote", result.contains("-") || result.contains("?"));
+  }
+
 }
