@@ -14,31 +14,27 @@ public class App {
   public static void main(String[] args) throws FileNotFoundException {
       getQuoteFromAPI();
   }
-//This is to get quotes from API and write it to a class
-  public static String  getQuoteFromAPI() throws FileNotFoundException {
+
+  public static void getQuoteFromAPI() throws FileNotFoundException {
+    // https://www.baeldung.com/java-http-request
     try {
       URL url = new URL("http://swquotesapi.digitaljedi.dk/api/SWQuote/RandomStarWarsQuote");
       HttpURLConnection con = (HttpURLConnection) url.openConnection();
       con.setRequestMethod("GET");
-      System.out.println(con.getResponseCode());
       BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
       Gson gson = new Gson();
-      QuoteApi apiQuote = gson.fromJson(in, QuoteApi.class);
-      write(apiQuote);
+      ApiQuote apiQuote = gson.fromJson(in, ApiQuote.class);
+      writeToApiFile(apiQuote);
       in.close();
       System.out.println(apiQuote);
-      return apiQuote.toString();
     } catch (IOException e) {
       e.printStackTrace();
       Quote[] quotes = makeQuotesFromFile();
       System.out.println(getRandomQuoteFromFile(quotes));
     }
-      return "not found";
   }
 
-
-//This is to write quotes to file
-  public static void write(QuoteApi quote) {
+  public static void writeToApiFile(ApiQuote quote) {
     BufferedWriter writer = null;
     try {
       Gson gson = new Gson();
@@ -52,17 +48,15 @@ public class App {
     }
   }
 
-//This is to get quotes from the file
-  public static Quote[] getQuotesFromFile() throws FileNotFoundException {
+  public static Quote[] makeQuotesFromFile() throws FileNotFoundException {
     Gson gson = new Gson();
     Quote[] quotes = gson.fromJson(new FileReader("src/main/resources/recentquotes.json"), Quote[].class);
     return quotes;
   }
 
-//This will pull a random quote
-  public static Quote getRandomQuote(Quote[] quotes) {
-
+  public static Quote getRandomQuoteFromFile(Quote[] quotes) {
     int random = (int)(Math.random() * quotes.length);
     return quotes[random];
   }
 }
+
