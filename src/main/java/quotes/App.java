@@ -12,7 +12,7 @@ import java.net.URL;
 public class App {
 
   public static void main(String[] args) throws FileNotFoundException {
-      getQuoteFromAPI();
+    getQuoteFromAPI();
   }
 
   public static void getQuoteFromAPI() throws FileNotFoundException {
