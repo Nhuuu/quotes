@@ -1,15 +1,13 @@
 package quotes;
 
-public class QuoteApi {
+public class ApiQuote {
   String starWarsQuote;
 
-  public QuoteApi(String starWarsQuote){
-
+  public ApiQuote(String starWarsQuote){
     this.starWarsQuote = starWarsQuote;
   }
 
   public String toString(){
-
     return String.format(this.starWarsQuote);
   }
 }
